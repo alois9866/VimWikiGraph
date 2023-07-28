@@ -64,6 +64,11 @@ class VimwikiGraph:
                 for link in links:
                     child_node = self.__normalize_path('', link)
                     self.graph.add_edge(name, child_node)
+                    root_file_path = os.path.join(self.root_dir, link + '.md')
+                    diary_file_path = os.path.join(self.root_dir, 'diary', link + '.md')
+                    if not os.path.exists(root_file_path) \
+                            and not os.path.exists(diary_file_path):
+                        self.graph.nodes[child_node]['color'] = 'grey'
 
     def __filter_lines(self, regexes: list, lines):
         """
