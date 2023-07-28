@@ -9,7 +9,7 @@ import traceback
 class VimwikiGraph:
 
     # {{{ Private
-    def __init__(self, root_dir: str, file_extensions: list = ['wiki'], graph_name: str = 'vimwikigraph', **args):
+    def __init__(self, root_dir: str, file_extensions: list = ['md'], graph_name: str = 'vimwikigraph', **args):
         self.graph = nx.DiGraph(name=graph_name)
         self.root_dir = root_dir
         self.file_extensions = file_extensions
@@ -38,8 +38,8 @@ class VimwikiGraph:
         return os.path.join(self.root_dir, path)
 
     def __add_suffix_to_node(self, path):
-        if not path.endswith(".wiki"):
-            return path + ".wiki"
+        if not path.endswith(".md"):
+            return path + ".md"
 
     def __create_nodes(self):
         node_dict = dict()
