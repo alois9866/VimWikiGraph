@@ -23,8 +23,7 @@ class VimwikiGraph:
             link = re.sub(r'/.*', '', link)
             return link
         if re.match('file:', link):
-            link = re.sub(r'.*:/', '', link)
-            link = re.sub(r'.*/', '', link)
+            link = re.sub(r'.*:', '', link)
             return link
         link = re.sub(r'.*/', '', link)
         if len(root) > 0:
