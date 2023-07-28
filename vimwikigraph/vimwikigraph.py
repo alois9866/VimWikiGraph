@@ -22,15 +22,14 @@ class VimwikiGraph:
             link = re.sub(r'.*:/+', '', link)
             link = re.sub(r'/.*', '', link)
             return link
-        if re.match('file:/', link):
-            link = re.sub(r'.*:/+', '', link)
+        if re.match('file:', link):
+            link = re.sub(r'.*:/', '', link)
             link = re.sub(r'.*/', '', link)
             return link
-        path = os.path.join(root, link)
-        path = re.sub(r':', '', path)
-        if not path.endswith(".wiki"):
-            path += ".wiki"
-        return re.sub(r'[^/]+/\.\./', '', path)
+        link = re.sub(r'.*/', '', link)
+        if len(root) > 0:
+            return os.path.join(root, link)
+        return link
 
     def __resolve_relative_path(self, path):
         if path[0] == '/':
@@ -45,22 +44,26 @@ class VimwikiGraph:
         node_dict = dict()
         for root, dir, files in os.walk(self.root_dir):
             for file in files:
-                split = file.split('.')
-                if split[-1] in self.file_extensions:
-                    name = os.path.join(root, file)
+                if file.endswith('.md'):
+                    name = file.removesuffix('.md')
                     node_dict[name] = root
-                    self.graph.add_node(name, label='.'.join(split[:-1]))
+                    self.graph.add_node(name, label=name)
         return node_dict
 
     def __parse_and_add_edges(self, node_dict):
         for name, root in node_dict.items():
-            with open(name, 'r') as f:
+            with open(os.path.join(root, name) + '.md', 'r') as f:
                 lines = f.readlines()
+
+            name = re.sub(r'.*/', '', name)
+            name = name.removesuffix('.md')
+
             self.lines[name] = lines
+
             for line in lines:
-                links = re.findall(r'\[\[([^#|\[\]]+)(#[^|\[\]]*)?(|[^\]]*)?\]\]', line)
+                links = re.findall(r'\[[^\]]*\]\(([^\)]+)\)', line)
                 for link in links:
-                    child_node = self.__normalize_path(root, link[0])
+                    child_node = self.__normalize_path('', link)
                     self.graph.add_edge(name, child_node)
 
     def __filter_lines(self, regexes: list, lines):
