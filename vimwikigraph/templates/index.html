@@ -52,12 +52,10 @@
   document.addEventListener(
     "keydown",
     (event) => {
-      if (event.key === "Escape") {
-        var node_text = document.getElementById("nodeText");
-        var graph_container = document.getElementById("graph");
-        node_text.style.visibility = 'hidden';
-        graph_container.style.opacity = 1;
-      }
+	  var node_text = document.getElementById("nodeText");
+	  var graph_container = document.getElementById("graph");
+	  node_text.style.visibility = 'hidden';
+	  graph_container.style.opacity = 1;
     }
   );
 </script>
@@ -81,7 +79,7 @@
         }
         else {
           node_text.style.visibility = 'visible';
-          graph_container.style.opacity = 0.2;
+          graph_container.style.opacity = 0.1;
         }
       } else if (xhr.status === 404) {
         console.error("Node not found");
