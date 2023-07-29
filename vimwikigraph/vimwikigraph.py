@@ -66,11 +66,22 @@ class VimwikiGraph:
 
                     child_node = self.__normalize_path('', link)
                     self.graph.add_edge(name, child_node)
+
                     root_file_path = os.path.join(self.root_dir, link + '.md')
                     diary_file_path = os.path.join(self.root_dir, 'diary', link + '.md')
                     if not os.path.exists(root_file_path) \
                             and not os.path.exists(diary_file_path):
                         self.graph.nodes[child_node]['color'] = 'grey'
+
+                    if child_node == 'diary' or re.match(r'[0-9]{4}-[0-9]{2}-[0-9]{2}', child_node):
+                        self.graph.nodes[child_node]['color'] = 'green'
+
+                tags = re.findall(r'(\s|^)(@[a-z0-9_-]+\b)', line)
+                for tag in tags:
+                    tag = tag[1]
+                    self.graph.add_edge(name, tag)
+                    self.graph.nodes[tag]['color'] = 'orange'
+
 
     def __filter_lines(self, regexes: list, lines):
         """
