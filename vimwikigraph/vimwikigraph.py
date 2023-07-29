@@ -62,6 +62,8 @@ class VimwikiGraph:
             for line in lines:
                 links = re.findall(r'\[[^\]]*\]\(([^\)]+)\)', line)
                 for link in links:
+                    link = link.removesuffix('.md')
+
                     child_node = self.__normalize_path('', link)
                     self.graph.add_edge(name, child_node)
                     root_file_path = os.path.join(self.root_dir, link + '.md')
